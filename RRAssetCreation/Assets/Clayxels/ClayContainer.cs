@@ -2872,9 +2872,9 @@ namespace Clayxels{
 				return;
 			}
 
-			if(!this.editingThisContainer){
-				return;
-			}
+			// if(!this.editingThisContainer){
+			// 	return;
+			// }
 
 			// debug auto bounds
 			// if(this.autoBounds){

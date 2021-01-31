@@ -25,7 +25,11 @@ namespace Clayxels{
 		Each container nests one or more ClayObject as children to generate the final clay result.
 	*/
 	[ExecuteInEditMode]
-	public class ClayContainer : MonoBehaviour{
+	public class ClayContainer : MonoBehaviour
+	{
+		private const int _maxDetalization = 100;
+		private const float _maxChunkSize = 40;
+		private const float _minChunkSIze = 4;
 		
 		/* CustomMaterial: specify a material that is not the default one. It will need a special shader as shown in the examples provided.*/
 		public Material customMaterial = null;
@@ -129,8 +133,8 @@ namespace Clayxels{
 			if(value < 0){
 				value = 0;
 			}
-			else if(value > 100){
-				value = 100;
+			else if(value > _maxDetalization){
+				value = _maxDetalization;
 			}
 
 			this.clayxelDetail = value;
@@ -474,7 +478,7 @@ namespace Clayxels{
 
 			this.memoryOptimized = false;
 
-			this.chunkSize = (int)Mathf.Lerp(40.0f, 4.0f, (float)this.clayxelDetail / 100.0f);
+			this.chunkSize = (int)Mathf.Lerp(_maxChunkSize, _minChunkSIze, (float)this.clayxelDetail / _maxDetalization);
 			this.limitChunkValues();
 
 			this.clayObjects.Clear();
@@ -910,8 +914,8 @@ namespace Clayxels{
 			if(meshDetail < 0){
 				meshDetail = 0;
 			}
-			else if(meshDetail > 100){
-				meshDetail = 100;
+			else if(meshDetail > _maxDetalization){
+				meshDetail = _maxDetalization;
 			}
 
 			bool vertexColors = true;
@@ -1385,7 +1389,7 @@ namespace Clayxels{
 		}
 
 		void updateInternalBounds(){
-			this.chunkSize = (int)Mathf.Lerp(40.0f, 4.0f, (float)this.clayxelDetail / 100.0f);
+			this.chunkSize =  (int)Mathf.Lerp(_maxChunkSize, _minChunkSIze, (float)this.clayxelDetail / _maxDetalization);
 			
 			if(this.autoBoundsChunkSize > this.chunkSize){
 				this.chunkSize = this.autoBoundsChunkSize;
@@ -2035,7 +2039,7 @@ namespace Clayxels{
 
 			int newChunkSize = Mathf.CeilToInt(boundsSize / ClayContainer.maxChunkX);
 
-			int detailChunkSize = (int)Mathf.Lerp(40.0f, 4.0f, (float)this.clayxelDetail / 100.0f);
+			int detailChunkSize = (int)Mathf.Lerp(_maxChunkSize, _minChunkSIze, (float)this.clayxelDetail / _maxDetalization);
 
 			int estimatedNumChunks = Mathf.CeilToInt(boundsSize / detailChunkSize);
 
@@ -2916,39 +2920,26 @@ namespace Clayxels{
 		public bool shouldRetopoMesh = false;
 		public int retopoMaxVerts = -1;
 		
-		public void storeMesh(string assetName){
+		public void storeMesh(string path){
 			if(this.gameObject.GetComponent<MeshFilter>().sharedMesh == null){
 				return;
 			}
 
-			string assetNameUnique = this.storeAssetPath + "_" + this.GetInstanceID();
+			// string assetNameUnique = this.storeAssetPath + "_" + this.GetInstanceID();
 
 
 			if(!AssetDatabase.Contains(this.gameObject.GetComponent<MeshRenderer>().sharedMaterial)){
 				if(this.gameObject.GetComponent<MeshRenderer>() != null){
-					if(this.gameObject.GetComponent<MeshRenderer>().sharedMaterial != null){
-						AssetDatabase.CreateAsset(this.gameObject.GetComponent<MeshRenderer>().sharedMaterial, "Assets/" + assetNameUnique + ".mat");
+					if(this.gameObject.GetComponent<MeshRenderer>().sharedMaterial != null)
+					{
+						var materialPath = path.Replace(".mesh", ".mat");
+						AssetDatabase.CreateAsset(this.gameObject.GetComponent<MeshRenderer>().sharedMaterial, materialPath);
 					}
 				}
 			}
 
-			AssetDatabase.CreateAsset(this.gameObject.GetComponent<MeshFilter>().sharedMesh, "Assets/" + assetNameUnique + ".mesh");
+			AssetDatabase.CreateAsset(this.gameObject.GetComponent<MeshFilter>().sharedMesh, path);
 			AssetDatabase.SaveAssets();
-			
-			// UnityEngine.Object[] data = AssetDatabase.LoadAllAssetsAtPath("Assets/" + assetNameUnique + ".mesh");
-			// for(int i = 0; i < data.Length; ++i){
-			// 	if(data[i].GetType() == typeof(Mesh)){
-			// 		if(this.gameObject.GetComponent<MeshFilter>() != null){
-			// 			this.gameObject.GetComponent<MeshFilter>().sharedMesh = (Mesh)data[i];
-			// 		}
-					
-			// 		if(this.gameObject.GetComponent<MeshRenderer>() != null && storedMat != null){
-			// 			this.gameObject.GetComponent<MeshRenderer>().sharedMaterial = storedMat;
-			// 		}
-
-			// 		break;
-			// 	}
-			// }
 		}
 
 		public AnimationClip claymationAnimClip = null;

@@ -10,8 +10,17 @@
 /RRAssetCreation/[Ll]ogs/
 /RRAssetCreation/[Mm]emoryCaptures/
 
+/RoboRanch/[Ll]ibrary/
+/RoboRanch/[Tt]emp/
+/RoboRanch/[Oo]bj/
+/RoboRanch/[Bb]uild/
+/RoboRanch/[Bb]uilds/
+/RoboRanch/[Ll]ogs/
+/RoboRanch/[Mm]emoryCaptures/
+
 # Never ignore Asset meta data
-!/[Aa]ssets/**/*.meta
+!/RRAssetCreation/[Aa]ssets/**/*.meta
+!/RoboRanch/[Aa]ssets/**/*.meta
 
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*

@@ -1,1 +1,1 @@
-{"boundsColor":[100,100,100,50],"pickingKey":"p","mirrorDuplicateKey":"m","maxPointCount":2,"maxSolidsCount":2,"maxSolidsPerVoxel":1,"frameSkip":0,"maxBounds":4,"vramLimitEnabled":true,"lodNear":0.0,"lodFar":0.0}
+{"boundsColor":[100,100,100,50],"pickingKey":"p","mirrorDuplicateKey":"m","maxPointCount":2,"maxSolidsCount":2,"maxSolidsPerVoxel":2,"frameSkip":0,"maxBounds":4,"vramLimitEnabled":false,"lodNear":0.0,"lodFar":0.0}

@@ -268,9 +268,19 @@ namespace Clayxels{
 					
 					clayxel.transferMaterialPropertiesToMesh();
 
-					if(clayxel.storeAssetPath != ""){
-						clayxel.storeMesh(clayxel.storeAssetPath);
+					string path = EditorUtility.SaveFilePanelInProject("Save png", clayxel.gameObject.name, "mesh",
+						"Please enter a file name to save the texture to");
+
+					Debug.Log(path);
+					
+					if (path.Length != 0)
+					{
+						clayxel.storeMesh(path);
 					}
+					
+					// if(clayxel.storeAssetPath != ""){
+					// 	clayxel.storeMesh(clayxel.storeAssetPath);
+					// }
 				}
 
 				EditorGUILayout.Space();

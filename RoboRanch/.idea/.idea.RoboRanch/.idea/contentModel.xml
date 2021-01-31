@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\eugen\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\eugen\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_RoboRanch.1005915747.00" t="ExcludeRecursive" />
+    <e p="D:\Unity\RoboRanch\RoboRanch" t="IncludeRecursive">
+      <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="Scripts" t="Include">
+          <e p="ProceduralFootAnim.cs" t="Include" />
+        </e>
+        <e p="Tools" t="Include">
+          <e p="Boing Kit" t="Include">
+            <e p="Editor" t="Include">
+              <e p="BoingKitStandardShaderGUI.cs" t="Include" />
+            </e>
+            <e p="Examples" t="Include">
+              <e p="Boing Behavior" t="Include">
+                <e p="Parameter Comparison" t="Include">
+                  <e p="readme.txt" t="Include" />
+                </e>
+                <e p="Parented Object" t="Include">
+                  <e p="readme.txt" t="Include" />
+                </e>
+                <e p="Parented Object Stress Test" t="Include">
+                  <e p="ParentedObjectStressTestMain.cs" t="Include" />
+                </e>
+              </e>
+              <e p="Boing Bones" t="Include">
+                <e p="Bouncy Hair" t="Include">
+                  <e p="readme.txt" t="Include" />
+                </e>
+                <e p="Jellyfish UFO Bunny" t="Include">
+                  <e p="JellyfishUFOCamera.cs" t="Include" />
+                  <e p="readme.txt" t="Include" />
+                </e>
+                <e p="Length Stiffness Comparison" t="Include">
+                  <e p="LengthStiffnessComparison.cs" t="Include" />
+                  <e p="readme.txt" t="Include" />
+                </e>
+                <e p="Pose Stiffness Comparison" t="Include">
+                  <e p="PoseStiffnessComparison.cs" t="Include" />
+                  <e p="readme.txt" t="Include" />
+                </e>
+                <e p="Squash &amp; Stretch Comparison" t="Include">
+                  <e p="readme.txt" t="Include" />
+                  <e p="SquashAndStretchComparison.cs" t="Include" />
+                </e>
+                <e p="Transform Hierarchy" t="Include">
+                  <e p="readme.txt" t="Include" />
+                </e>
+                <e p="UFO Bunny" t="Include">
+                  <e p="ColliderSpinner.cs" t="Include" />
+                  <e p="readme.txt" t="Include" />
+                  <e p="UFOCamera.cs" t="Include" />
+                  <e p="UFOEffector.cs" t="Include" />
+                </e>
+              </e>
+              <e p="Boing Effector &amp; Reactor" t="Include">
+                <e p="All Influence Types Active" t="Include">
+                  <e p="readme.txt" t="Include" />
+                </e>
+                <e p="Bush Field" t="Include">
+                  <e p="readme.txt" t="Include" />
+                </e>
+                <e p="Influence Type Comparison" t="Include">
+                  <e p="readme.txt" t="Include" />
+                </e>
+                <e p="Platformer Collectibles" t="Include">
+                  <e p="CollectibleCoin.cs" t="Include" />
+                  <e p="PlatformerCollectiblesMain.cs" t="Include" />
+                  <e p="readme.txt" t="Include" />
+                </e>
+              </e>
+              <e p="Boing Field &amp; Sampler" t="Include">
+                <e p="Bush Field Follow" t="Include">
+                  <e p="readme.txt" t="Include" />
+                </e>
+                <e p="Warped Teapots" t="Include">
+                  <e p="Example Custom Shader (per object).shader" t="Include" />
+                  <e p="Example Custom Shader (per vertex).shader" t="Include" />
+                  <e p="readme.txt" t="Include" />
+                </e>
+              </e>
+              <e p="Boing Field Propagation" t="Include">
+                <e p="Implosion &amp; Explosion" t="Include">
+                  <e p="ImplosionExplosionMain.cs" t="Include" />
+                  <e p="OrbitCamera.cs" t="Include" />
+                  <e p="ScaleSpring.cs" t="Include" />
+                </e>
+                <e p="Liquid" t="Include">
+                  <e p="Liquid Surface.shader" t="Include" />
+                  <e p="LiquidMain.cs" t="Include" />
+                </e>
+                <e p="Wind" t="Include">
+                  <e p="CurveBall.cs" t="Include" />
+                </e>
+              </e>
+              <e p="Common" t="Include">
+                <e p="Script" t="Include">
+                  <e p="BushFieldReactorFieldMain.cs" t="Include" />
+                  <e p="BushFieldReactorMain.cs" t="Include" />
+                  <e p="MousePositionDrag.cs" t="Include" />
+                  <e p="MouseRotationDrag.cs" t="Include" />
+                  <e p="Oscillator.cs" t="Include" />
+                  <e p="RotationStepper.cs" t="Include" />
+                  <e p="Spinner.cs" t="Include" />
+                  <e p="WASD.cs" t="Include" />
+                </e>
+                <e p="UFO Bunny" t="Include">
+                  <e p="UFOController.cs" t="Include" />
+                </e>
+                <e p="UnityChan" t="Include">
+                  <e p="Models" t="Include">
+                    <e p="UnityChanShader" t="Include">
+                      <e p="Shader" t="Include">
+                        <e p="readme.txt" t="Include" />
+                        <e p="Unitychan_chara_akarami_blend.shader" t="Include" />
+                        <e p="Unitychan_chara_eye.shader" t="Include" />
+                        <e p="Unitychan_chara_eye_blend.shader" t="Include" />
+                        <e p="Unitychan_chara_eyelash_blend.shader" t="Include" />
+                        <e p="Unitychan_chara_fuku.shader" t="Include" />
+                        <e p="Unitychan_chara_fuku_ds.shader" t="Include" />
+                        <e p="Unitychan_chara_hada.shader" t="Include" />
+                        <e p="Unitychan_chara_hada_blend.shader" t="Include" />
+                        <e p="Unitychan_chara_hair.shader" t="Include" />
+                        <e p="Unitychan_chara_hair_ds.shader" t="Include" />
+                      </e>
+                    </e>
+                  </e>
+                  <e p="Scripts" t="Include">
+                    <e p="AutoBlink.cs" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+            <e p="readme.txt" t="Include" />
+            <e p="Script" t="Include">
+              <e p="BoingBehavior.cs" t="Include" />
+              <e p="BoingBoneCollider.cs" t="Include" />
+              <e p="BoingBones.cs" t="Include" />
+              <e p="BoingEffector.cs" t="Include" />
+              <e p="BoingKit.cs" t="Include" />
+              <e p="BoingManager.cs" t="Include" />
+              <e p="BoingManagerPostUpdatePump.cs" t="Include" />
+              <e p="BoingManagerPreUpdatePump.cs" t="Include" />
+              <e p="BoingReactor.cs" t="Include" />
+              <e p="BoingReactorField.cs" t="Include" />
+              <e p="BoingReactorFieldCPUSampler.cs" t="Include" />
+              <e p="BoingReactorFieldGPUSampler.cs" t="Include" />
+              <e p="BoingWork.cs" t="Include" />
+              <e p="BoingWorkAsynchronous.cs" t="Include" />
+              <e p="BoingWorkSynchronous.cs" t="Include" />
+              <e p="Editor" t="Include">
+                <e p="BoingBehaviorEditor.cs" t="Include" />
+                <e p="BoingBonesEditor.cs" t="Include" />
+                <e p="BoingEditorBase.cs" t="Include" />
+                <e p="BoingReactorEditor.cs" t="Include" />
+                <e p="BoingReactorFieldEditor.cs" t="Include" />
+                <e p="SharedBoingParamsEditor.cs" t="Include" />
+              </e>
+              <e p="Resources" t="Include">
+                <e p="Boing Kit" t="Include">
+                  <e p="BoingReactorFieldCompute.compute" t="Include" />
+                </e>
+              </e>
+              <e p="SharedBoingParams.cs" t="Include" />
+              <e p="Types.cs" t="Include" />
+              <e p="Util" t="Include">
+                <e p="Collision.cs" t="Include" />
+                <e p="ConditionalFieldAttribute.cs" t="Include" />
+                <e p="ConditionalFieldAttributeDrawer.cs" t="Include" />
+                <e p="MathUtil.cs" t="Include" />
+                <e p="QuaternionUtil.cs" t="Include" />
+                <e p="SpringTracker.cs" t="Include" />
+                <e p="VectorUtil.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Shader" t="Include">
+              <e p="BoingKit.cginc" t="Include" />
+              <e p="BoingKitStandard.shader" t="Include" />
+              <e p="BoingKitStandardCore.cginc" t="Include" />
+              <e p="BoingKitStandardCoreForward.cginc" t="Include" />
+              <e p="BoingKitStandardCoreForwardSimple.cginc" t="Include" />
+              <e p="BoingKitStandardMeta.cginc" t="Include" />
+              <e p="BoingKitStandardShadow.cginc" t="Include" />
+              <e p="BoingKitStandardSpecular.shader" t="Include" />
+              <e p="Internal" t="Include">
+                <e p="BoingKitCore.cginc" t="Include" />
+                <e p="Math.cginc" t="Include" />
+                <e p="Quaternion.cginc" t="Include" />
+                <e p="SpringFloat4.cginc" t="Include" />
+                <e p="Vector.cginc" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="FastIK" t="Include">
+            <e p="Documentation.txt" t="Include" />
+            <e p="Scripts" t="Include">
+              <e p="FastIK" t="Include">
+                <e p="FastIKFabric.cs" t="Include" />
+                <e p="FastIKLook.cs" t="Include" />
+              </e>
+              <e p="Sample" t="Include">
+                <e p="SampleProcedualAnimation.cs" t="Include" />
+                <e p="SampleRotator.cs" t="Include" />
+                <e p="SampleSinMover.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="RealToon" t="Include">
+            <e p="Change - Fix Log.txt" t="Include" />
+            <e p="Editor" t="Include">
+              <e p="RealToonShaderGUI.cs" t="Include" />
+              <e p="RealToonShaderGUI_Lite.cs" t="Include" />
+              <e p="RealToonShaderGUI_URP_SRP.cs" t="Include" />
+            </e>
+            <e p="For Unity 2019 users please read.txt" t="Include" />
+            <e p="For VRoid users please read.txt" t="Include" />
+            <e p="RealToon Shaders" t="Include">
+              <e p="Effects" t="Include">
+                <e p="Sobel Outline" t="Include">
+                  <e p="RealToonSobelOutline.cs" t="Include" />
+                  <e p="Shader" t="Include">
+                    <e p="RealToon_Sobel_Outline_FX.shader" t="Include" />
+                  </e>
+                </e>
+              </e>
+              <e p="Version 5" t="Include">
+                <e p="URP" t="Include">
+                  <e p="Default" t="Include">
+                    <e p="D_Default_URP.shader" t="Include" />
+                    <e p="D_Fade_Transparency_URP.shader" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+            <e p="RealToon SRP" t="Include">
+              <e p="LWRP" t="Include">
+                <e p="Please read before you unpack or import.txt" t="Include" />
+              </e>
+              <e p="URP" t="Include">
+                <e p="Please read before you unpack or import.txt" t="Include" />
+              </e>
+            </e>
+            <e p="RealToon Tools" t="Include">
+              <e p="CustomShadowResolution.cs" t="Include" />
+              <e p="FrameByFrameRendering" t="Include">
+                <e p="FrameByFrameRendering_Default.cs" t="Include" />
+                <e p="FrameByFrameRendering_Manual.cs" t="Include" />
+              </e>
+            </e>
+            <e p="What's New.txt" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="Packages" t="ExcludeRecursive" />
+      <e p="RoboRanch.sln" t="IncludeFlat" />
+      <e p="Temp\Bin" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>

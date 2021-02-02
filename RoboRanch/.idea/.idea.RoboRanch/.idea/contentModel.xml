@@ -8,6 +8,9 @@
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
+          <e p="FastController.cs" t="Include" />
+          <e p="IKBodyTest.cs" t="Include" />
+          <e p="LegIKController.cs" t="Include" />
           <e p="ProceduralFootAnim.cs" t="Include" />
         </e>
         <e p="Tools" t="Include">

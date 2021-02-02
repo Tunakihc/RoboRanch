@@ -9,8 +9,7 @@ public class ProceduralFootAnim : MonoBehaviour
         public LegIKController Controller;
         public int[] Pares;
     }
-
-
+    
     [Header("Conponents")] [SerializeField]
     List<FootInfo> Foots = new List<FootInfo>();
 
@@ -25,19 +24,14 @@ public class ProceduralFootAnim : MonoBehaviour
 
     void ChangeLeg(FootInfo info)
     {
-        Debug.Log("Work");
-        
         info.Controller.isEnabled = false;
 
         for (int i = 0; i < info.Pares.Length; i++)
-        {
             Foots[info.Pares[i]].Controller.isEnabled = true;
-        }
     }
 
     void LateUpdate()
     {
-
         UpdateRig();
     }
     

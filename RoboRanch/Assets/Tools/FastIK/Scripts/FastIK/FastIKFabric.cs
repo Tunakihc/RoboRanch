@@ -49,6 +49,7 @@ namespace DitzelGames.FastIK
         protected Quaternion StartRotationTarget;
         protected Transform Root;
 
+        private bool _inited = false;
 
         // Start is called before the first frame update
         void Awake()
@@ -108,23 +109,32 @@ namespace DitzelGames.FastIK
                 current = current.parent;
             }
 
-
-
+            _inited = true;
         }
 
         // Update is called once per frame
         void LateUpdate()
         {
-            ResolveIK();
+            if(_inited && _targetPrevPos != Target.position)
+                ResolveIK();
+
+            _targetPrevPos = Target.position;
         }
+
+        private Vector3 _targetPrevPos;
+
+        // async void CheckLegs()
+        // {
+        //     while (_inited)
+        //     {
+        //         
+        //     }
+        // }
 
         private void ResolveIK()
         {
-            if (Target == null)
-                return;
-
-            if (BonesLength.Length != ChainLength)
-                Init();
+            // if (BonesLength.Length != ChainLength)
+            //     Init();
 
             //Fabric
 
@@ -175,19 +185,19 @@ namespace DitzelGames.FastIK
                 }
             }
 
-            //move towards pole
-            if (Pole != null)
-            {
-                var polePosition = GetPositionRootSpace(Pole);
-                for (int i = 1; i < Positions.Length - 1; i++)
-                {
-                    var plane = new Plane(Positions[i + 1] - Positions[i - 1], Positions[i - 1]);
-                    var projectedPole = plane.ClosestPointOnPlane(polePosition);
-                    var projectedBone = plane.ClosestPointOnPlane(Positions[i]);
-                    var angle = Vector3.SignedAngle(projectedBone - Positions[i - 1], projectedPole - Positions[i - 1], plane.normal);
-                    Positions[i] = Quaternion.AngleAxis(angle, plane.normal) * (Positions[i] - Positions[i - 1]) + Positions[i - 1];
-                }
-            }
+            // //move towards pole
+            // if (Pole != null)
+            // {
+            //     var polePosition = GetPositionRootSpace(Pole);
+            //     for (int i = 1; i < Positions.Length - 1; i++)
+            //     {
+            //         var plane = new Plane(Positions[i + 1] - Positions[i - 1], Positions[i - 1]);
+            //         var projectedPole = plane.ClosestPointOnPlane(polePosition);
+            //         var projectedBone = plane.ClosestPointOnPlane(Positions[i]);
+            //         var angle = Vector3.SignedAngle(projectedBone - Positions[i - 1], projectedPole - Positions[i - 1], plane.normal);
+            //         Positions[i] = Quaternion.AngleAxis(angle, plane.normal) * (Positions[i] - Positions[i - 1]) + Positions[i - 1];
+            //     }
+            // }
 
             //set position & rotation
             for (int i = 0; i < Positions.Length; i++)
@@ -202,51 +212,38 @@ namespace DitzelGames.FastIK
 
         private Vector3 GetPositionRootSpace(Transform current)
         {
-            if (Root == null)
-                return current.position;
-            else
-                return Quaternion.Inverse(Root.rotation) * (current.position - Root.position);
+            return Quaternion.Inverse(Root.rotation) * (current.position - Root.position);
         }
 
         private void SetPositionRootSpace(Transform current, Vector3 position)
         {
-            if (Root == null)
-                current.position = position;
-            else
-                current.position = Root.rotation * position + Root.position;
+            current.position = Root.rotation * position + Root.position;
         }
 
         private Quaternion GetRotationRootSpace(Transform current)
         {
-            //inverse(after) * before => rot: before -> after
-            if (Root == null)
-                return current.rotation;
-            else
-                return Quaternion.Inverse(current.rotation) * Root.rotation;
+            return Quaternion.Inverse(current.rotation) * Root.rotation;
         }
 
         private void SetRotationRootSpace(Transform current, Quaternion rotation)
         {
-            if (Root == null)
-                current.rotation = rotation;
-            else
-                current.rotation = Root.rotation * rotation;
+            current.rotation = Root.rotation * rotation;
         }
 
-        void OnDrawGizmos()
-        {
-#if UNITY_EDITOR
-            var current = this.transform;
-            for (int i = 0; i < ChainLength && current != null && current.parent != null; i++)
-            {
-                var scale = Vector3.Distance(current.position, current.parent.position) * 0.1f;
-                Handles.matrix = Matrix4x4.TRS(current.position, Quaternion.FromToRotation(Vector3.up, current.parent.position - current.position), new Vector3(scale, Vector3.Distance(current.parent.position, current.position), scale));
-                Handles.color = Color.green;
-                Handles.DrawWireCube(Vector3.up * 0.5f, Vector3.one);
-                current = current.parent;
-            }
-#endif
-        }
+//         void OnDrawGizmos()
+//         {
+// #if UNITY_EDITOR
+//             var current = this.transform;
+//             for (int i = 0; i < ChainLength && current != null && current.parent != null; i++)
+//             {
+//                 var scale = Vector3.Distance(current.position, current.parent.position) * 0.1f;
+//                 Handles.matrix = Matrix4x4.TRS(current.position, Quaternion.FromToRotation(Vector3.up, current.parent.position - current.position), new Vector3(scale, Vector3.Distance(current.parent.position, current.position), scale));
+//                 Handles.color = Color.green;
+//                 Handles.DrawWireCube(Vector3.up * 0.5f, Vector3.one);
+//                 current = current.parent;
+//             }
+// #endif
+//         }
 
     }
 }

@@ -16,6 +16,9 @@
             "."
         ],
         "fbxSavePaths": [
+            "Models/Characters/MushroomRed",
+            "Models/Characters/Influenza",
+            "Models/Characters/Virus/FBX",
             "Models/Props/Car/FBX",
             "."
         ],
@@ -30,7 +33,7 @@
             "include": 0,
             "lodLevel": 1,
             "objectPosition": 0,
-            "exportUnrendered": true
+            "exportUnrendered": false
         },
         "convertToPrefabSettingsSerialize": {
             "exportFormat": 0,

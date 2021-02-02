@@ -10,6 +10,7 @@ namespace DitzelGames.FastIK
     /// </summary>
     public class FastIKFabric : MonoBehaviour
     {
+        public bool AutoInit;
         /// <summary>
         /// Chain length of bones
         /// </summary>
@@ -52,10 +53,11 @@ namespace DitzelGames.FastIK
         // Start is called before the first frame update
         void Awake()
         {
-            Init();
+            if(AutoInit)
+                Init();
         }
 
-        void Init()
+        public void Init()
         {
             //initial array
             Bones = new Transform[ChainLength + 1];

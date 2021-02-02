@@ -114,7 +114,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1952460459057207863}
-  m_LocalRotation: {x: -0, y: 0.23648179, z: -0, w: 0.97163594}
+  m_LocalRotation: {x: 0, y: 0.23648201, z: 0, w: 0.9716359}
   m_LocalPosition: {x: -12.795394, y: 3.083, z: -22.626345}
   m_LocalScale: {x: 0.19424, y: 0.19424, z: 0.19424}
   m_Children:
@@ -382,6 +382,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4595826955240942522}
+  - component: {fileID: 2107058986}
   m_Layer: 0
   m_Name: R_Leg_end
   m_TagString: Untagged
@@ -403,6 +404,24 @@ Transform:
   m_Father: {fileID: 2714390766390470818}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2107058986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3183168501407235589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03ca45bb53dc94f478358a1b6475653d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ChainLength: 1
+  Target: {fileID: 0}
+  Pole: {fileID: 0}
+  Iterations: 10
+  Delta: 0.001
+  SnapBackStrength: 1
 --- !u!1 &3388013237252463962
 GameObject:
   m_ObjectHideFlags: 0
@@ -412,6 +431,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2714390766390470818}
+  - component: {fileID: 2107058987}
   m_Layer: 0
   m_Name: R_Leg
   m_TagString: Untagged
@@ -434,6 +454,92 @@ Transform:
   m_Father: {fileID: 5949943487127112521}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2107058987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3388013237252463962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86961f0e6ed205c4e8630b056dd4770e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isEnabled: 0
+  isStep: 0
+  isGrounded: 0
+  _ik: {fileID: 2107058986}
+  _base: {fileID: 0}
+  _target: {fileID: 0}
+  _footRadius: 0.05
+  _collisionLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  _stepDistance: 0.03
+  _stepHeight: 0.02
+  _stepOvershoot: 0.01
+  _stepCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _stepTrajectoryCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.493042
+      value: 1.0023575
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.9969183
+      value: 0.004716981
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _minSpeed: 0.1
+  _returnPositionWaitTime: 0.1
+  _returnPositionDamp: 0.2
+  _flyDamp: 0.1
 --- !u!1 &3708314128751959518
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,6 +549,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7830000126904017119}
+  - component: {fileID: 2107058988}
   m_Layer: 0
   m_Name: L_Leg_end
   m_TagString: Untagged
@@ -464,6 +571,24 @@ Transform:
   m_Father: {fileID: 7507865356194341831}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2107058988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3708314128751959518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03ca45bb53dc94f478358a1b6475653d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ChainLength: 1
+  Target: {fileID: 0}
+  Pole: {fileID: 0}
+  Iterations: 10
+  Delta: 0.001
+  SnapBackStrength: 1
 --- !u!1 &3785606378562305380
 GameObject:
   m_ObjectHideFlags: 0
@@ -566,6 +691,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7507865356194341831}
+  - component: {fileID: 2107058989}
   m_Layer: 0
   m_Name: L_Leg
   m_TagString: Untagged
@@ -588,6 +714,92 @@ Transform:
   m_Father: {fileID: 5949943487127112521}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2107058989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5412117854374932059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86961f0e6ed205c4e8630b056dd4770e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isEnabled: 0
+  isStep: 1
+  isGrounded: 0
+  _ik: {fileID: 2107058988}
+  _base: {fileID: 0}
+  _target: {fileID: 0}
+  _footRadius: 0.05
+  _collisionLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  _stepDistance: 0.03
+  _stepHeight: 0.02
+  _stepOvershoot: 0.01
+  _stepCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _stepTrajectoryCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.493042
+      value: 1.0023575
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.9969183
+      value: 0.004716981
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _minSpeed: 0.1
+  _returnPositionWaitTime: 0.1
+  _returnPositionDamp: 0.2
+  _flyDamp: 0.1
 --- !u!1 &5444373491297564257
 GameObject:
   m_ObjectHideFlags: 0
@@ -688,6 +900,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7846270621263745043}
+  - component: {fileID: 2107058991}
   m_Layer: 0
   m_Name: Armature
   m_TagString: Untagged
@@ -710,6 +923,23 @@ Transform:
   m_Father: {fileID: 1176381638157369485}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2107058991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8537778011078203993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c91b878351ffb344bb444d198bead791, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Foots:
+  - Controller: {fileID: 2107058989}
+    Pares: 01000000
+  - Controller: {fileID: 2107058987}
+    Pares: 00000000
 --- !u!1 &8799062767664674942
 GameObject:
   m_ObjectHideFlags: 0

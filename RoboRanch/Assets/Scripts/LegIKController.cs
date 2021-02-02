@@ -71,18 +71,16 @@ public class LegIKController : MonoBehaviour
         _target.position = _ik.transform.position;
         _offset = _base.InverseTransformPoint(_target.position);
         _length = Vector3.Distance(_base.position, _target.position);
-        Land();
+        
+        _currentPos = _startPos = _target.position;
+        _prevPos = GetTargetStepPos(_base.TransformPoint(_offset), out isGrounded);
+        
+        _ik.Init();
     }
     
     public void Init(Action onLand)
     {
         _onLand = onLand;
-    }
-    
-    void Land()
-    {
-        _currentPos = _startPos = _target.position;
-        _prevPos = GetTargetStepPos(_base.TransformPoint(_offset), out isGrounded);
     }
 
 
@@ -186,17 +184,17 @@ public class LegIKController : MonoBehaviour
     {
         
         var targetPos = new Vector3(targetStep.x,_base.position.y, targetStep.z);
-        var ray = new Ray(targetPos, Vector3.down);
+        var ray = new Ray(targetPos, -_base.up);
 
         if (Physics.SphereCast(ray, _footRadius, out var hitInfo, _length + _footRadius,_collisionLayer))
         {
             isGrounded = true;
             _target.rotation = Quaternion.LookRotation(hitInfo.normal);
-            return hitInfo.point + Vector3.up * _footRadius;
+            return hitInfo.point + _base.up * _footRadius;
         }
 
         isGrounded = false;
-        Quaternion.LookRotation(Vector3.up);
+        Quaternion.LookRotation(_base.up);
         return targetStep;
     }
 

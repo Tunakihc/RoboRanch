@@ -16,11 +16,11 @@
             "."
         ],
         "fbxSavePaths": [
+            "Models/Characters/Bird",
             "Models/Characters/MushroomRed",
             "Models/Characters/Influenza",
             "Models/Characters/Virus/FBX",
-            "Models/Props/Car/FBX",
-            "."
+            "Models/Props/Car/FBX"
         ],
         "selectedFbxPath": 0,
         "selectedPrefabPath": 0,

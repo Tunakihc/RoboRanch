@@ -33,6 +33,7 @@ public class Character : MonoBehaviour
     void Update()
     {
         var isGrounded = _controller.IsCollide(-transform.up, 0.5f);
+        var isHead = _controller.IsCollide(transform.up, 0.5f);
         
         if (_controller.IsCollide(transform.up, 0.5f) || isGrounded)
             _velocity.y = 0;
@@ -41,7 +42,7 @@ public class Character : MonoBehaviour
         
         input = input.normalized;
 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !isHead)
         {
             _velocity.y += _jumpVel;
         }

@@ -13,6 +13,19 @@ public class Controller : MonoBehaviour
         public RaycastHit Hit;
     }
 
+    struct CollisionState
+    {
+        public bool ClimbingSlope;
+        public float SlopeAngle, SlopeAngleOld;
+
+        public void Reset()
+        {
+            ClimbingSlope = false;
+            SlopeAngleOld = SlopeAngle;
+            SlopeAngle = 0;
+        }
+    }
+
     Vector3 RotateAround(Vector3 point, Vector3 position, float radius, Vector3 axis, float length)
     {
         var angle = (Mathf.Clamp(length / (2 * Mathf.PI * radius),0,1)) * 360;
@@ -21,56 +34,6 @@ public class Controller : MonoBehaviour
         return point + vector3;
     }
     
-    private CharacterController _collider;
-    private List<RaycastInfo> _raycastOrigins = new List<RaycastInfo>();
-
-    [Range(5,100)]
-    [SerializeField] private int _horizontalRayCount = 5;
-    [Range(5,100)]
-    [SerializeField] private int _verticalRayCount = 5;
-
-    // [Range(0, 1)] [SerializeField] private float _horSearchAngle = 0;
-    // [Range(0, 1)] [SerializeField] private float _verSearchAngle = 0;
-
-    [SerializeField] private LayerMask _collisionMask;
-
-    private float _horizontalRaySpacing;
-    private float _verticalRaySpacing;
-    
-
-    
-    void Start()
-    {
-        _collider = GetComponent<CharacterController>();
-        
-        CalculateRaySpacing();
-        UpdateRaycastOrigins();
-    }
-
-    public bool IsCollide(Vector3 dir, float offset)
-    {
-        for (var i = 0; i < _raycastOrigins.Count; i++)
-        {
-            if (!CloseDir(dir, _raycastOrigins[i].Dir, offset)) continue;
-            if (_raycastOrigins[i].IsCollide) return true;
-        }
-
-        return false;
-    }
-    
-    public void Move(Vector3 velocity)
-    {
-        ResetCollisions();
-
-        // velocity.y = 0;
-        
-        ClimbSlopeCheck(ref velocity);
-        SlideWallCheck(ref velocity);
-
-        transform.Translate(velocity);
-        // _collider.Move(velocity);
-    }
-
     bool CloseDir(Vector3 moveDir, Vector3 rayDir, float offset)
     {
         // var xAxis = (Mathf.Sign(moveDir.x) == Mathf.Sign(rayDir.x) && Mathf.Abs(moveDir.x) > 0 && Mathf.Abs(rayDir.x )> 0) || moveDir.x == 0;
@@ -91,6 +54,88 @@ public class Controller : MonoBehaviour
             Vector3.Dot(n, Vector3.Cross(v1, v2)),
             Vector3.Dot(v1, v2)) * Mathf.Rad2Deg;
     }
+    
+    public bool IsCollide(Vector3 dir, float offset)
+    {
+        for (var i = 0; i < _raycastOrigins.Count; i++)
+        {
+            if (!CloseDir(dir, _raycastOrigins[i].Dir, offset)) continue;
+            if (_raycastOrigins[i].IsCollide) return true;
+        }
+
+        return false;
+    }
+    
+    private CharacterController _collider;
+    private List<RaycastInfo> _raycastOrigins = new List<RaycastInfo>();
+    private CollisionState _collision;
+
+    [Range(5,100)]
+    [SerializeField] private int _horizontalRayCount = 5;
+    [Range(5,100)]
+    [SerializeField] private int _verticalRayCount = 5;
+
+    // [Range(0, 1)] [SerializeField] private float _horSearchAngle = 0;
+    // [Range(0, 1)] [SerializeField] private float _verSearchAngle = 0;
+
+    [SerializeField] private LayerMask _collisionMask;
+
+    private float _horizontalRaySpacing;
+    private float _verticalRaySpacing;
+    
+    void Start()
+    {
+        _collider = GetComponent<CharacterController>();
+        
+        CalculateRaySpacing();
+        UpdateRaycastOrigins();
+    }
+    
+    public void Move(Vector3 velocity)
+    {
+        ResetCollisions();
+
+        // velocity.y = 0;
+        
+        CheckVerticalCollision(ref velocity);
+        ClimbSlopeCheck(ref velocity);
+        
+        CheckHorizontalCollision(ref velocity);
+        SlideWallCheck(ref velocity);
+
+        
+        transform.Translate(velocity);
+        // _collider.Move(velocity);
+    }
+    
+    void CheckVerticalCollision(ref Vector3 velocity)
+    {
+        var dir = transform.up * Mathf.Sign(velocity.y);
+        
+        var rayLength = Mathf.Abs(velocity.magnitude) + _collider.skinWidth;
+        var hit = GetRayInfo(velocity, dir, rayLength,0.5f);
+
+        if (hit != null)
+        {
+            var resVel = (hit.Hit.distance - _collider.skinWidth) * dir;
+            velocity.y = resVel.y;
+        }
+        
+
+    }
+    
+    void CheckHorizontalCollision(ref Vector3 velocity)
+    {
+        var checkDir = new Vector3(velocity.x, 0, velocity.z).normalized;
+        var hit = CheckCollision(ref velocity, checkDir, 0.1f);
+
+        if (hit == null) return;
+
+        var resVel = (hit.Hit.distance - _collider.skinWidth) * hit.Dir;
+
+        velocity.x = resVel.x;
+        velocity.z = resVel.z;
+    }
 
     void SlideWallCheck(ref Vector3 velocity)
     {
@@ -103,60 +148,48 @@ public class Controller : MonoBehaviour
         
         var hit = GetRayInfo(velocity, dir, rayLength,0.5f);
 
-        if(hit == null) return;
+        if (hit != null)
+        {
+            var resVel = (hit.Hit.distance - _collider.skinWidth) * -hit.Hit.normal;
 
-        var resVel = (hit.Hit.distance - _collider.skinWidth) * -hit.Hit.normal;
-        
-        var targetDir = new Vector3(velocity.x, 0, velocity.z);
+            var targetDir = new Vector3(velocity.x, 0, velocity.z);
 
-        var projection = Vector3.Project(targetDir, resVel);
+            var projection = Vector3.Project(targetDir, resVel);
 
-        var newVel = targetDir - projection;
-        
-        velocity.x = newVel.x;
-        velocity.z = newVel.z;
+            var newVel = targetDir - projection;
 
-        CheckWallCollision(ref velocity);
-    }
-
-    void CheckWallCollision(ref Vector3 velocity)
-    {
-        var checkDir = new Vector3(velocity.x, 0, velocity.z).normalized;
-        var hit = CheckCollision(ref velocity, checkDir, 0.1f);
-
-        if (hit == null) return;
-
-        var resVel = (hit.Hit.distance- _collider.skinWidth) * hit.Dir;
-
-        velocity.x = resVel.x;
-        velocity.z = resVel.z;
+            velocity.x = newVel.x;
+            velocity.z = newVel.z;
+        }
     }
 
     //TODO: Diagonal slope climbing
     void ClimbSlopeCheck(ref Vector3 velocity)
     {
         if (velocity.y == 0) return;
-
-        var dir = transform.up * Mathf.Sign(velocity.y);
+        
+        if (_collision.ClimbingSlope)
+        {
+            velocity.x = velocity.y / Mathf.Tan(_collision.SlopeAngle * Mathf.Deg2Rad) * velocity.x;
+            velocity.z = velocity.y / Mathf.Tan(_collision.SlopeAngle * Mathf.Deg2Rad) * velocity.z;
+        }
+        
+        if (_collision.ClimbingSlope)
+            velocity.y = Mathf.Tan(_collision.SlopeAngle * Mathf.Deg2Rad *
+                                   new Vector3(velocity.x, 0, velocity.z).magnitude);
+        
+        var dir = -transform.up;
         
         var rayLength = Mathf.Abs(velocity.magnitude) + _collider.skinWidth;
         var hit = GetRayInfo(velocity, dir, rayLength,0.5f);
-            
-        if(hit == null) return;
-
-        var cross = Vector3.Cross(new Vector3(velocity.x, 0, velocity.z).normalized, dir);
-
-        var slopeAngle = -1 * AngleSigned(Vector3.down * Mathf.Sign(velocity.y), hit.Hit.normal, cross);
-
         
+        if(hit == null) return;
+        
+        // var cross = Vector3.Cross(new Vector3(velocity.x, 0, velocity.z).normalized, dir);
+        var slopeAngle = Vector3.Angle(Vector3.down , hit.Hit.normal);//Mathf.Abs(AngleSigned(Vector3.down * Mathf.Sign(velocity.y), hit.Hit.normal, cross));
+
         if (slopeAngle <= _collider.slopeLimit)
             ClimbSlope(ref velocity, slopeAngle);
-        else
-        {
-            var resVel = (hit.Hit.distance - _collider.skinWidth) * dir;
-        
-            velocity.y = resVel.y;
-        }
     }
     
     void ClimbSlope(ref Vector3 velocity, float slopeAngle)
@@ -166,16 +199,18 @@ public class Controller : MonoBehaviour
 
         var targetYVelocity = Mathf.Sin(slopeAngle * Mathf.Deg2Rad) * moveDistance;
 
-        if (velocity.y <= targetYVelocity)
-        {
-            velocity.y = Mathf.Sin(slopeAngle * Mathf.Deg2Rad) * moveDistance;
-            velocity.x = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * targetDir.x;
-            velocity.z = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * targetDir.y;
-        }
-    }
+        if (velocity.y > targetYVelocity) return;
+        
+        velocity.y = Mathf.Sin(slopeAngle * Mathf.Deg2Rad) * moveDistance;
+        velocity.x = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * targetDir.x;
+        velocity.z = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * targetDir.y;
 
-    //TODO: Check work of velocity changing on collision
-    //TODO: Stuck to the wall bug
+        _collision.ClimbingSlope = true;
+        _collision.SlopeAngle = slopeAngle;
+    }
+    
+
+    
     RaycastInfo CheckCollision(ref Vector3 velocity, Vector3 checkDir, float offset = 0)
     {
         var directionXyz = new Vector3(velocity.x * checkDir.x, velocity.y * checkDir.y, velocity.z * checkDir.z);
@@ -185,25 +220,6 @@ public class Controller : MonoBehaviour
         var hit = GetRayInfo(velocity, checkDir, rayLength, offset);
 
         return hit ?? null;
-
-        // var resVel = (hit.Hit.distance- _collider.skinWidth) * hit.Dir;
-
-        // var velocityChangePower = Mathf.Clamp(Vector3.Dot(checkDir, hit.Dir), 0, 1);
-        //
-        // resVel *= velocityChangePower;
-        //
-        // // var targetVel = Vector3.Project(resVel*velocityChangePower, checkDir);
-        //
-        //
-        // velocity.x = Mathf.Lerp(velocity.x, resVel.x,  Mathf.Abs(checkDir.x));
-        // velocity.y = Mathf.Lerp(velocity.y, resVel.y,  Mathf.Abs(checkDir.y));
-        // velocity.z = Mathf.Lerp(velocity.z, resVel.z,  Mathf.Abs(checkDir.z));
-        //
-        // // targetVel.x *= Mathf.Abs(checkDir.x);
-        // // targetVel.y *= Mathf.Abs(checkDir.y);
-        // // targetVel.z *= Mathf.Abs(checkDir.z);
-        //
-        // // velocity = targetVel;
     }
 
     RaycastInfo GetRayInfo(Vector3 velocity, Vector3 dir, float dist, float offset = 0)
@@ -251,6 +267,8 @@ public class Controller : MonoBehaviour
     {
         for (var i = 0; i < _raycastOrigins.Count; i++)
             _raycastOrigins[i].IsCollide = _raycastOrigins[i].isActive = false;
+        
+        _collision.Reset();
     }
 
     void UpdateRaycastOrigins()

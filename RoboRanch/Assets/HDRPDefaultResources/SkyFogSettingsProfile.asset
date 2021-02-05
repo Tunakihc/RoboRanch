@@ -207,7 +207,7 @@ MonoBehaviour:
     showEyeDropper: 1
   gradientDiffusion:
     m_OverrideState: 1
-    m_Value: 2.17
+    m_Value: 0
 --- !u!114 &6775376097864012941
 MonoBehaviour:
   m_ObjectHideFlags: 3

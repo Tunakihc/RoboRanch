@@ -64,12 +64,6 @@ public class Controller : MonoBehaviour
 
         // velocity.y = 0;
         
-        // if (velocity.y != 0)
-        //     VerticalMove(ref velocity);
-        //
-        // if (velocity.x != 0 || velocity.z != 0)
-        //     HorizontalMove(ref velocity);
-        
         ClimbSlopeCheck(ref velocity);
         SlideWallCheck(ref velocity);
 
@@ -97,43 +91,6 @@ public class Controller : MonoBehaviour
             Vector3.Dot(n, Vector3.Cross(v1, v2)),
             Vector3.Dot(v1, v2)) * Mathf.Rad2Deg;
     }
-    
-    void VerticalMove(ref Vector3 velocity)
-    {
-        var checkDir = transform.up * Mathf.Sign(velocity.y);
-        var hit = CheckCollision(ref velocity, checkDir, 0.1f);
-
-        if (hit == null) return;
-        
-        Debug.Log("Vertical collision");
-
-        var resVel = (hit.Hit.distance - _collider.skinWidth) * hit.Dir;
-        var targetVel = Vector3.Lerp(velocity, resVel, Vector3.Dot(hit.Dir, checkDir));
-
-        velocity.y = targetVel.y;
-    }
-
-    void HorizontalMove(ref Vector3 velocity)
-    {
-        var checkDir = new Vector3(velocity.x, 0, velocity.z).normalized;
-        var hit = CheckCollision(ref velocity, checkDir, 0.7f);
-
-        if (hit == null) return;
-
-        var resVel = (hit.Hit.distance- _collider.skinWidth) * hit.Dir;
-        
-        var targetDir = new Vector2(velocity.x, velocity.z);
-        var moveDistance = targetDir.magnitude;
-        // var climbVelocityY = Mathf.Sin(slopeAngle * Mathf.Deg2Rad) * moveDistance;
-        //
-        // if(velocity.y < climbVelocityY)
-        //     velocity.y =  Mathf.Sin(slopeAngle * Mathf.Deg2Rad) * moveDistance;
-        //
-        // targetDir = targetDir.normalized;
-        //
-        // velocity.x = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * moveDistance * targetDir.x;
-        // velocity.z = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * moveDistance * targetDir.y;
-    }
 
     void SlideWallCheck(ref Vector3 velocity)
     {
@@ -145,74 +102,36 @@ public class Controller : MonoBehaviour
         dir = dir.normalized;
         
         var hit = GetRayInfo(velocity, dir, rayLength,0.5f);
-        
-        // Debug.Log("Start velocity " + velocity.x);
-        
+
         if(hit == null) return;
-        //
-        // var wallAngle = AngleSigned(dir, hit.Hit.normal, Vector3.up);
-        //
-        // var startDebug = hit.Origin + transform.position;
+
+        var resVel = (hit.Hit.distance - _collider.skinWidth) * -hit.Hit.normal;
         
         var targetDir = new Vector3(velocity.x, 0, velocity.z);
 
-        //var hitDir = (hit.Hit.point - hit.Origin + transform.position).normalized;
-
-        var projection = Vector3.Project(targetDir, hit.Dir);
-
-
-        Debug.DrawLine(hit.Hit.point, hit.Hit.point + targetDir, Color.blue);
-        // Debug.DrawLine(hit.Hit.point, hit.Hit.point - hit.Hit.normal, Color.red);
-        Debug.DrawLine(hit.Hit.point, hit.Hit.point + projection, Color.red);
-        Debug.DrawLine(hit.Hit.point + projection, hit.Hit.point + targetDir);
-
+        var projection = Vector3.Project(targetDir, resVel);
 
         var newVel = targetDir - projection;
         
         velocity.x = newVel.x;
         velocity.z = newVel.z;
 
-        // SlideWall(ref velocity, hit.Hit.normal);
+        CheckWallCollision(ref velocity);
     }
 
-    //TODO: Slide wall normal calculation
-    void SlideWall(ref Vector3 velocity, Vector3 wallDir)
+    void CheckWallCollision(ref Vector3 velocity)
     {
-        var startDir = new Vector3(velocity.x, 0, velocity.z).normalized;
-        var targetDir = new Vector3(velocity.x, 0, velocity.z);
-        // var moveDistance = targetDir.magnitude;
+        var checkDir = new Vector3(velocity.x, 0, velocity.z).normalized;
+        var hit = CheckCollision(ref velocity, checkDir, 0.1f);
 
+        if (hit == null) return;
 
+        var resVel = (hit.Hit.distance- _collider.skinWidth) * hit.Dir;
 
-
-        // targetDir = targetDir.normalized;
-
-        // var angle = Vector3.Angle(targetDir, Vector3.left);
-        
-        // targetDir = Quaternion.AngleAxis(-wallAngle, transform.up) * targetDir;
-        var targetVelocity = startDir - (-wallDir);
-        
-        // var movementPower = Mathf.Clamp(Vector3.Dot(startDir, targetDir.normalized), 0, 1);
-        
-        // if ()
-        // {
-        //     velocity.x = 0;
-        //     velocity.z = 0;
-        // }
-        // else
-        // {
-            velocity.x = targetVelocity.x * targetDir.x;
-            velocity.z = targetVelocity.z * targetDir.z;
-        // }
-
-       
-        // velocity.x = Mathf.Sin(wallAngle * Mathf.Deg2Rad) * moveDistance * targetDir.x * Mathf.Sign(wallAngle);
-        // velocity.z = Mathf.Cos(-wallAngle * Mathf.Deg2Rad) * moveDistance * targetDir.z;
-        
-        // Debug.Log("SinX " + Mathf.Sin(wallAngle * Mathf.Deg2Rad));
-        // Debug.Log("End velocity " +  velocity.x );
-    
+        velocity.x = resVel.x;
+        velocity.z = resVel.z;
     }
+
     //TODO: Diagonal slope climbing
     void ClimbSlopeCheck(ref Vector3 velocity)
     {
@@ -244,15 +163,15 @@ public class Controller : MonoBehaviour
     {
         var targetDir = new Vector2(velocity.x, velocity.z);
         var moveDistance = targetDir.magnitude;
-        var climbVelocityY = Mathf.Sin(slopeAngle * Mathf.Deg2Rad) * moveDistance;
 
-        // if (velocity.y < climbVelocityY)
-            velocity.y = climbVelocityY;
+        var targetYVelocity = Mathf.Sin(slopeAngle * Mathf.Deg2Rad) * moveDistance;
 
-        targetDir = targetDir.normalized;
-        
-        velocity.x = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * moveDistance * targetDir.x;
-        velocity.z = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * moveDistance * targetDir.y;
+        if (velocity.y <= targetYVelocity)
+        {
+            velocity.y = Mathf.Sin(slopeAngle * Mathf.Deg2Rad) * moveDistance;
+            velocity.x = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * targetDir.x;
+            velocity.z = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * targetDir.y;
+        }
     }
 
     //TODO: Check work of velocity changing on collision
@@ -295,12 +214,15 @@ public class Controller : MonoBehaviour
         
         var crossVelocity = (velNorm - dir);
         crossVelocity = new Vector3(crossVelocity.x * velocity.x,crossVelocity.y * velocity.y,crossVelocity.z * velocity.z);
-        
+
+        var minAngle = -1f;
         var minDist = dist;
         RaycastInfo returnHit = null;
         
         for (var i = 0; i < _raycastOrigins.Count; i++)
         {
+            var angle = Vector3.Dot(dir, _raycastOrigins[i].Dir);
+            
             if (!CloseDir(dir, _raycastOrigins[i].Dir, offset)) continue;
 
             _raycastOrigins[i].isActive = true;
@@ -313,11 +235,13 @@ public class Controller : MonoBehaviour
             
             _raycastOrigins[i].IsCollide = true;
             _raycastOrigins[i].Hit = hit;
-            
-            if (hit.distance > minDist) continue;
-            
-            minDist = hit.distance;
-            returnHit = _raycastOrigins[i];
+
+            if (hit.distance < minDist || hit.distance == minDist && angle > minAngle)
+            {
+                minDist = hit.distance;
+                returnHit = _raycastOrigins[i];
+                minAngle = angle;
+            }
         }
 
         return returnHit;
@@ -425,7 +349,7 @@ public class Controller : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        bool enabled = false;
+        bool enabled = true;
         
         if (!Application.isPlaying || !enabled) return;
         

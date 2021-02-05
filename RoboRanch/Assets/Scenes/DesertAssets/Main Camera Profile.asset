@@ -280,13 +280,13 @@ MonoBehaviour:
   m_AdvancedMode: 0
   shadows:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: 0.18001807}
+    m_Value: {x: 1, y: 1, z: 1, w: 0.80108005}
   midtones:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: 0}
+    m_Value: {x: 1, y: 1, z: 1, w: 0.17101711}
   highlights:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: 0}
+    m_Value: {x: 1, y: 1, z: 1, w: 0.06300631}
   shadowsStart:
     m_OverrideState: 0
     m_Value: 0
@@ -378,7 +378,7 @@ MonoBehaviour:
     m_Value: 2
   intensity:
     m_OverrideState: 1
-    m_Value: 0.084
+    m_Value: 0.076
     min: 0
     max: 1
   response:
@@ -621,21 +621,21 @@ MonoBehaviour:
     m_Value: 1
   threshold:
     m_OverrideState: 0
-    m_Value: 0.02
+    m_Value: 1.52
     min: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 0.1
+    m_Value: 0.006
     min: 0
     max: 1
   scatter:
     m_OverrideState: 0
-    m_Value: 0
+    m_Value: 0.485
     min: 0
     max: 1
   tint:
     m_OverrideState: 0
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_Value: {r: 0, g: 1, b: 0.94729495, a: 1}
     hdr: 0
     showAlpha: 0
     showEyeDropper: 1
@@ -675,8 +675,9 @@ MonoBehaviour:
   - {fileID: -1221993073367024491}
   - {fileID: 3526546882109433411}
   - {fileID: -5081282871863638670}
-  - {fileID: -9022713882494577518}
   - {fileID: -6552875224013589315}
+  - {fileID: -9022713882494577518}
+  - {fileID: 9169107829336743697}
 --- !u!114 &818828549607100433
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1331,3 +1332,26 @@ MonoBehaviour:
   m_HighQualityFiltering:
     m_OverrideState: 0
     m_Value: 1
+--- !u!114 &9169107829336743697
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da5ab44aadfb1804db5fd470983ac1b8, type: 3}
+  m_Name: LiftGammaGain
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  lift:
+    m_OverrideState: 1
+    m_Value: {x: 1, y: 0.96833336, z: 0.81, w: -0.0540054}
+  gamma:
+    m_OverrideState: 1
+    m_Value: {x: 1, y: 0.992, z: 0.76, w: 0.17101726}
+  gain:
+    m_OverrideState: 1
+    m_Value: {x: 1, y: 0.9241667, z: 0.87, w: 0.27002707}

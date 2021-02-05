@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using DitzelGames.FastIK;
-using Unity.Mathematics;
+
 using UnityEngine;
 
 public class LegIKController : MonoBehaviour

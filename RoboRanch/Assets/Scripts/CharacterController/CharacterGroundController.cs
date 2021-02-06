@@ -6,7 +6,7 @@ public class CharacterGroundController : MonoBehaviour
     public LayerMask _physicalWorld;
     
     private float _gravity = -20;
-    private Vector3 _velocity;
+    public Vector3 _velocity;
     private Vector3 _inputVelocity;
     
     private CharacterController _controller;
@@ -23,7 +23,7 @@ public class CharacterGroundController : MonoBehaviour
 
     private Vector3 _movementVelocitySmoothing;
 
-    class GroundInfo
+    public class GroundInfo
     {
         public bool isGrounded;
         public Vector3 groundNormal;
@@ -37,7 +37,7 @@ public class CharacterGroundController : MonoBehaviour
         public Quaternion localRotation;
     }
 
-    private GroundInfo _groundInfo;
+    public GroundInfo _groundInfo;
 
 
     void Start()
@@ -58,8 +58,8 @@ public class CharacterGroundController : MonoBehaviour
         VerticalMovement();
 
         UpdatePlatform();
-
-        _controller.Move((_velocity + _inputVelocity) * Time.deltaTime);
+        
+        _controller.Move(( _velocity + _inputVelocity) * Time.deltaTime);
     }
 
     void UpdatePlatform()
@@ -123,7 +123,7 @@ public class CharacterGroundController : MonoBehaviour
 
     void HorizontalMovement()
     {
-        var input = new Vector3(Input.GetAxisRaw("Horizontal"),0 , Input.GetAxisRaw("Vertical"));
+        var input = GetCameraRelativeInput();//new Vector3(Input.GetAxisRaw("Horizontal"),0 , Input.GetAxisRaw("Vertical"));
         
         var angle = Vector3.Angle( _groundInfo.groundNormal, Vector3.up);
         
@@ -136,6 +136,33 @@ public class CharacterGroundController : MonoBehaviour
         
         _inputVelocity = Vector3.SmoothDamp(_inputVelocity, targetVelocity, ref _movementVelocitySmoothing,
             _groundInfo.isGrounded ? _accelerationTimeGrounded : _accelerationTimeAirborn);
+
+        var lookRotation = input;
+        lookRotation.y = 0;
+        lookRotation = lookRotation.normalized;
+        transform.rotation = Quaternion.LookRotation(lookRotation, Vector3.up);
+    }
+
+    Vector3 GetCameraRelativeInput()
+    {
+        float horizontalAxis = Input.GetAxisRaw("Horizontal");
+        float verticalAxis = Input.GetAxisRaw("Vertical");
+         
+        //assuming we only using the single camera:
+        var camera = Camera.main;
+ 
+        //camera forward and right vectors:
+        var forward = camera.transform.forward;
+        var right = camera.transform.right;
+ 
+        //project forward and right vectors on the horizontal plane (y = 0)
+        forward.y = 0f;
+        right.y = 0f;
+        forward.Normalize();
+        right.Normalize();
+ 
+        //this is the direction in the world space we want to move:
+        return forward * verticalAxis + right * horizontalAxis;
     }
 
     void VerticalMovement()

@@ -12,6 +12,9 @@
           <e p="TestUI.cs" t="Include" />
         </e>
         <e p="Scripts" t="Include">
+          <e p="Camera" t="Include">
+            <e p="CharacterCameraController.cs" t="Include" />
+          </e>
           <e p="CharacterController" t="Include">
             <e p="CharacterGroundController.cs" t="Include" />
             <e p="Controller.cs" t="Include" />

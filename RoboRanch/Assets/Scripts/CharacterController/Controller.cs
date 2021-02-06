@@ -16,13 +16,19 @@ public class Controller : MonoBehaviour
     struct CollisionState
     {
         public bool ClimbingSlope;
+        public bool DescendingSlope;
         public float SlopeAngle, SlopeAngleOld;
+        public Vector3 SlopeDir;
+        public Vector3 VelocityOld;
 
         public void Reset()
         {
             ClimbingSlope = false;
+            DescendingSlope = false;
             SlopeAngleOld = SlopeAngle;
             SlopeAngle = 0;
+            SlopeDir = Vector3.zero;
+       
         }
     }
 
@@ -90,127 +96,201 @@ public class Controller : MonoBehaviour
         CalculateRaySpacing();
         UpdateRaycastOrigins();
     }
-    
+
+    public bool IsGrounded => _collider.isGrounded;
+
     public void Move(Vector3 velocity)
     {
-        ResetCollisions();
-
-        // velocity.y = 0;
-        
-        CheckVerticalCollision(ref velocity);
-        ClimbSlopeCheck(ref velocity);
-        
-        CheckHorizontalCollision(ref velocity);
-        SlideWallCheck(ref velocity);
-
-        
-        transform.Translate(velocity);
-        // _collider.Move(velocity);
+        _collider.Move(velocity);
     }
-    
-    void CheckVerticalCollision(ref Vector3 velocity)
-    {
-        var dir = transform.up * Mathf.Sign(velocity.y);
-        
-        var rayLength = Mathf.Abs(velocity.magnitude) + _collider.skinWidth;
-        var hit = GetRayInfo(velocity, dir, rayLength,0.5f);
 
-        if (hit != null)
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Rigidbody body = hit.collider.attachedRigidbody;
+
+        // no rigidbody
+        if (body == null || body.isKinematic)
         {
-            var resVel = (hit.Hit.distance - _collider.skinWidth) * dir;
-            velocity.y = resVel.y;
+            return;
         }
-        
 
+        // We dont want to push objects below us
+        if (hit.moveDirection.y < -0.3)
+        {
+            return;
+        }
+
+        // Calculate push direction from move direction,
+        // we only push objects to the sides never up and down
+        Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+
+        // If you know how fast your character is trying to move,
+        // then you can also multiply the push velocity by that.
+
+        // Apply the push
+        body.velocity = pushDir * 5;
     }
-    
+
     void CheckHorizontalCollision(ref Vector3 velocity)
-    {
-        var checkDir = new Vector3(velocity.x, 0, velocity.z).normalized;
-        var hit = CheckCollision(ref velocity, checkDir, 0.1f);
-
-        if (hit == null) return;
-
-        var resVel = (hit.Hit.distance - _collider.skinWidth) * hit.Dir;
-
-        velocity.x = resVel.x;
-        velocity.z = resVel.z;
-    }
-
-    void SlideWallCheck(ref Vector3 velocity)
     {
         if (velocity.x == 0 && velocity.z == 0)
             return;
         
-        var dir = new Vector3(velocity.x,0,velocity.z);
+        var checkDir = new Vector3(velocity.x, 0, velocity.z).normalized;
+        var hit = CheckCollision(ref velocity, checkDir, 0.1f);
+
+        if (hit != null)
+        {
+            var resVel = (hit.Hit.distance - _collider.skinWidth) * checkDir;
+
+            velocity.x = resVel.x;
+            velocity.z = resVel.z;
+
+
+        }
+    }
+
+    void SlideCheck(ref Vector3 velocity)
+    {
+        var dir = new Vector3(velocity.x, velocity.y, velocity.z);
         var rayLength = Mathf.Abs(dir.magnitude) + _collider.skinWidth;
         dir = dir.normalized;
         
-        var hit = GetRayInfo(velocity, dir, rayLength,0.5f);
+        var hit = GetRayInfo(velocity, dir, rayLength,0.1f);
 
         if (hit != null)
         {
             var resVel = (hit.Hit.distance - _collider.skinWidth) * -hit.Hit.normal;
-
             var targetDir = new Vector3(velocity.x, 0, velocity.z);
-
             var projection = Vector3.Project(targetDir, resVel);
-
             var newVel = targetDir - projection;
 
             velocity.x = newVel.x;
             velocity.z = newVel.z;
+            velocity.y = newVel.y;
         }
     }
 
-    //TODO: Diagonal slope climbing
-    void ClimbSlopeCheck(ref Vector3 velocity)
+    void CheckVerticalCollision(ref Vector3 velocity)
     {
-        if (velocity.y == 0) return;
+        if(velocity.y == 0) return;
+        
+        var dir = Vector3.up * Mathf.Sign(velocity.y);
+        
+        var rayLength = Mathf.Abs(velocity.y) + _collider.skinWidth;
+
+        var hit = GetRayInfo(velocity, dir, rayLength, 0.5f);
+
+        if (hit == null) return;
         
         if (_collision.ClimbingSlope)
         {
-            velocity.x = velocity.y / Mathf.Tan(_collision.SlopeAngle * Mathf.Deg2Rad) * velocity.x;
-            velocity.z = velocity.y / Mathf.Tan(_collision.SlopeAngle * Mathf.Deg2Rad) * velocity.z;
+            velocity.x = Mathf.Lerp(velocity.x,
+                Mathf.Abs(velocity.y) / Mathf.Tan(_collision.SlopeAngle * Mathf.Deg2Rad) * Mathf.Sign(velocity.x),
+                _collision.SlopeDir.x);
+
+            velocity.z = Mathf.Lerp(velocity.z,
+                Mathf.Abs(velocity.y) / Mathf.Tan(_collision.SlopeAngle * Mathf.Deg2Rad) * Mathf.Sign(velocity.z),
+                _collision.SlopeDir.z);
         }
         
-        if (_collision.ClimbingSlope)
-            velocity.y = Mathf.Tan(_collision.SlopeAngle * Mathf.Deg2Rad *
-                                   new Vector3(velocity.x, 0, velocity.z).magnitude);
+        // if(_collision.DescendingSlope && Vector3.Dot(hit.Dir, _collision.SlopeDir) > 0) return;
         
-        var dir = -transform.up;
-        
-        var rayLength = Mathf.Abs(velocity.magnitude) + _collider.skinWidth;
-        var hit = GetRayInfo(velocity, dir, rayLength,0.5f);
-        
-        if(hit == null) return;
-        
-        // var cross = Vector3.Cross(new Vector3(velocity.x, 0, velocity.z).normalized, dir);
-        var slopeAngle = Vector3.Angle(Vector3.down , hit.Hit.normal);//Mathf.Abs(AngleSigned(Vector3.down * Mathf.Sign(velocity.y), hit.Hit.normal, cross));
+        var resVel = (hit.Hit.distance - _collider.skinWidth) * dir;
+        var angle = Vector3.Angle(dir.normalized, resVel.normalized);
 
-        if (slopeAngle <= _collider.slopeLimit)
-            ClimbSlope(ref velocity, slopeAngle);
+        velocity.y = resVel.y + Mathf.Sin(angle * Mathf.Deg2Rad) * velocity.y;
     }
-    
-    void ClimbSlope(ref Vector3 velocity, float slopeAngle)
+
+    // void NewClimbing(ref Vector3 velocity)
+    // {
+    //     var dir = Vector3.up * Mathf.Sign(velocity.y);
+    //     var rayLength = Mathf.Abs(velocity.y) + _collider.skinWidth;
+    //     dir = dir.normalized;
+    //     
+    //     var hit = GetRayInfo(velocity, dir, rayLength,0.5f);
+    //
+    //
+    //     
+    //     if (hit != null)
+    //     {
+    //         var horizontalNormal = -hit.Hit.normal;
+    //         horizontalNormal.y = 0;
+    //         horizontalNormal = horizontalNormal.normalized;
+    //     
+    //         var slopeAngle = -Vector3.Angle(Vector3.down * Mathf.Sign(velocity.y), hit.Hit.normal);
+    //     
+    //         var targetDir = new Vector3(velocity.x, 0, velocity.z);
+    //         
+    //         if (Vector3.Dot(targetDir, horizontalNormal) < 0)
+    //             slopeAngle *= -1;
+    //
+    //         Debug.Log(slopeAngle);
+    //         
+    //         if (Mathf.Abs(slopeAngle) <= _collider.slopeLimit)
+    //         {
+    //             var resVel = (hit.Hit.distance - _collider.skinWidth) * -hit.Hit.normal;
+    //             var targetVel = Vector3.up * velocity.y;
+    //             var projection = Vector3.Project(targetVel, resVel);
+    //             var newVel = targetVel - projection;
+    //
+    //             if (slopeAngle <= 0)
+    //                 velocity.y = newVel.y;
+    //             else
+    //                 velocity.y -= newVel.y;
+    //         }
+    //     } 
+    // }
+
+    void ClimbSlopeCheck(ref Vector3 velocity, bool simpleCheck = false)
     {
-        var targetDir = new Vector2(velocity.x, velocity.z);
-        var moveDistance = targetDir.magnitude;
+        // if(velocity.y == 0) return;
 
-        var targetYVelocity = Mathf.Sin(slopeAngle * Mathf.Deg2Rad) * moveDistance;
+        var dir = Vector3.up * Mathf.Sign(velocity.y);
+        var magnitude = velocity.magnitude;
+        var rayLength = Mathf.Abs(magnitude) + _collider.skinWidth;
+        var hit = GetRayInfo(velocity, dir, rayLength,0.1f);
 
-        if (velocity.y > targetYVelocity) return;
+        if (hit == null) return;
+
+        var horizontalNormal = -hit.Hit.normal;
+        horizontalNormal.y = 0;
+        horizontalNormal = horizontalNormal.normalized;
         
-        velocity.y = Mathf.Sin(slopeAngle * Mathf.Deg2Rad) * moveDistance;
-        velocity.x = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * targetDir.x;
-        velocity.z = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * targetDir.y;
+        // var cross = Vector3.Cross(horizontalNormal, dir);
 
-        _collision.ClimbingSlope = true;
-        _collision.SlopeAngle = slopeAngle;
+        var slopeAngle = -Vector3.Angle(Vector3.down * Mathf.Sign(velocity.y), hit.Hit.normal);//AngleSigned(Vector3.down * Mathf.Sign(velocity.y), hit.Hit.normal, cross);//
+
+        var targetDir = new Vector3(velocity.x, 0, velocity.z);
+        if (Vector3.Dot(targetDir, horizontalNormal) < 0)
+        {
+            slopeAngle *= -1;
+        }
+        
+        Debug.Log(slopeAngle);
+
+        if (Mathf.Abs(slopeAngle) <= _collider.slopeLimit)
+        {
+            _collision.SlopeDir = hit.Hit.point - (hit.Origin + transform.position);
+            _collision.SlopeDir.y = 0;
+            _collision.SlopeDir = _collision.SlopeDir.normalized;
+
+
+            var moveDistance = targetDir.magnitude;
+
+            velocity.y = Mathf.Sin(-slopeAngle * Mathf.Deg2Rad) * moveDistance;
+            velocity.x = Mathf.Cos(Mathf.Abs(slopeAngle) * Mathf.Deg2Rad) * targetDir.x;
+            velocity.z = Mathf.Cos(Mathf.Abs(slopeAngle) * Mathf.Deg2Rad) * targetDir.z;
+
+            _collision.SlopeAngle = slopeAngle;
+        }
+        else
+        {
+            //TODO: Slide the slope
+            // velocity.y = resVel.y;
+        }
     }
-    
 
-    
     RaycastInfo CheckCollision(ref Vector3 velocity, Vector3 checkDir, float offset = 0)
     {
         var directionXyz = new Vector3(velocity.x * checkDir.x, velocity.y * checkDir.y, velocity.z * checkDir.z);

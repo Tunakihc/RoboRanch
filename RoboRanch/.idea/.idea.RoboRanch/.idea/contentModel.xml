@@ -13,7 +13,7 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="CharacterController" t="Include">
-            <e p="Character.cs" t="Include" />
+            <e p="CharacterGroundController.cs" t="Include" />
             <e p="Controller.cs" t="Include" />
           </e>
           <e p="IK" t="Include">

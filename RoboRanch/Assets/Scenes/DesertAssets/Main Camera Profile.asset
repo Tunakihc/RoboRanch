@@ -470,9 +470,9 @@ MonoBehaviour:
     m_Value: 1
   fixedExposure:
     m_OverrideState: 1
-    m_Value: 10
+    m_Value: 12.3
   compensation:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: -1
   limitMin:
     m_OverrideState: 0
@@ -625,7 +625,7 @@ MonoBehaviour:
     min: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 0.006
+    m_Value: 0.044
     min: 0
     max: 1
   scatter:
@@ -862,7 +862,7 @@ MonoBehaviour:
   m_AdvancedMode: 0
   postExposure:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.64
   contrast:
     m_OverrideState: 1
     m_Value: 8
@@ -1344,7 +1344,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da5ab44aadfb1804db5fd470983ac1b8, type: 3}
   m_Name: LiftGammaGain
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   m_AdvancedMode: 0
   lift:
     m_OverrideState: 1

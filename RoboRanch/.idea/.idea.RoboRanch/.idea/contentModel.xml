@@ -16,8 +16,9 @@
             <e p="CharacterCameraController.cs" t="Include" />
           </e>
           <e p="CharacterController" t="Include">
-            <e p="CharacterGroundController.cs" t="Include" />
-            <e p="Controller.cs" t="Include" />
+            <e p="Character.cs" t="Include" />
+            <e p="CharacterGroundMovement.cs" t="Include" />
+            <e p="IMovementModule.cs" t="Include" />
           </e>
           <e p="IK" t="Include">
             <e p="FastController.cs" t="Include" />
